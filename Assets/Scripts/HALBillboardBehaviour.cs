@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BillboardBehaviour : MonoBehaviour
+public class HALBillboardBehaviour : MonoBehaviour
 {
     private Camera camera;
 
@@ -15,6 +15,7 @@ public class BillboardBehaviour : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.rotation = Quaternion.Euler(0.0f, camera.transform.rotation.eulerAngles.y, 0.0f);
+        transform.rotation = camera.transform.rotation;
+        //transform.rotation = Quaternion.Euler(0.0f, camera.transform.rotation.eulerAngles.y, 0.5f);
     }
 }

@@ -60,7 +60,6 @@ public class HALMovementComponent : MonoBehaviour
     {
         var rbPosition = rb.position + characterMovement * (currentSpeed / rb.mass);
         rb.MovePosition(rbPosition);
-        Debug.Log("Move : " + rb.position);
     }
     
     public void Move(InputAction.CallbackContext context)
