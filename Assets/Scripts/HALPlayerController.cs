@@ -79,7 +79,12 @@ using UnityEngine;
 using System;
 using Unity.Mathematics;
 
-public class PlayerController : MonoBehaviour {
+[RequireComponent(typeof(HALMovementComponent))]
+public class HALPlayerController : MonoBehaviour
+{
+
+    public HALMovementComponent movementComponent;
+        
     [Header("Object setup")]
     public GameObject[] candyPrefabs;
    
@@ -88,15 +93,15 @@ public class PlayerController : MonoBehaviour {
     public Transform raycastStart;
 
     [Header("Runtime variables")]
-    public RoomObject currentRoom;
+    //public RoomObject currentRoom;
     public bool isHidding;
     
 
     private bool isDragingObject;
     private bool hasStamina = true;
 
-    public InventoryController inventory;
-
+   // public InventoryController inventory;
+/*
     // Use this for initialization
     void Start () {
         
@@ -105,134 +110,24 @@ public class PlayerController : MonoBehaviour {
         joint.enabled = false;
 
         if (inventory == null)
+        {
             inventory = new InventoryController();
+        }
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         if (Input.GetKeyDown(KeyCode.E))
+        {
             Interact();
+        }
         else if (Input.GetKeyUp(KeyCode.E))
+        {
             ReleaseInteraction();
-        
-        currentMovement();
-	}
-    private void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + (playerMovement * (currentSpeed / rb.mass)) * Time.deltaTime);
-    }
-
-    #region "MOVEMENTS"
-    // MOVEMENTS BEGIN
-    private void ContinuousMovement()
-    {
-        playerMovement.x = Input.GetAxisRaw("Horizontal");
-        playerMovement.y = Input.GetAxisRaw("Vertical");
-        if (playerMovement.x != 0 && playerMovement.y != 0)
-            playerMovement.y = 0;
-        if (Input.GetKey(KeyCode.LeftShift) && hasStamina)
-        {
-            currentSpeed = runningSpeed;
-            currentStamina -= Time.deltaTime;
-            if (currentStamina <= 0)
-                hasStamina = false;
-        }
-        else
-        {
-            currentSpeed = walkingSpeed;
-            if (!hasStamina)
-            {
-                currentStamina += Time.deltaTime;
-                if (currentStamina >= stamina)
-                    hasStamina = true;
-            }
-        }
-        SetDirection(playerMovement);
-    }
-
-    private void HorizontalMovement()
-    {
-        playerMovement.x = Input.GetAxisRaw("Horizontal");
-        playerMovement.y = 0;
-        SetDirection(playerMovement);
-    }
-    private void VerticalMovement()
-    {
-        playerMovement.x = 0;
-        playerMovement.y = Input.GetAxisRaw("Vertical");
-        SetDirection(playerMovement);
-    }
-
-    private void AutomaticMovement()
-    {
-        var distance = Vector2.Distance(transform.position, targetPoint);
-        if (lastDistance < distance)
-        {
-            playerMovement = Vector2.zero;
-            automaticMovement = false;
-            SetMovement(HALCharacterMovementTypes.Continuous);
-        }
-        lastDistance = distance;
-    }
-
-    private void SetDirection(Vector2 direction)
-    {
-        if (direction == playerDirection || direction.x + direction.y == 0)
-            return;
-        playerDirection = direction;
-    }
-
-    public void SetMovement(HALCharacterMovementTypes movementTypes)
-    {
-        playerMovimentation = movementTypes;
-        switch (movementTypes)
-        {
-            case HALCharacterMovementTypes.Continuous:
-                currentMovement = () => ContinuousMovement();
-                break;
-            case HALCharacterMovementTypes.Automatic:
-                currentMovement = () => AutomaticMovement();
-                break;
-            case HALCharacterMovementTypes.Horizontal:
-                currentMovement = () => HorizontalMovement();
-                break;
-            case HALCharacterMovementTypes.Vertical:
-                currentMovement = () => VerticalMovement();
-                break;
-            case HALCharacterMovementTypes.None:
-                currentMovement = () => { playerMovement = Vector2.zero; };
-                break;
-            default:
-                break;
         }
     }
-
-    public void GoTo(Vector2 destination)
-    {
-        targetPoint = destination; 
-
-        float deltaX = math.abs(rb.position.x - destination.x);
-        float deltaY = math.abs(rb.position.y - destination.y);
-
-        Vector2 startPoint = rb.position;
-        if (deltaX > deltaY)
-            startPoint.y = destination.y;
-        else
-            startPoint.x = destination.x;
-
-        transform.position = startPoint;
-
-        playerMovement = (destination - startPoint).normalized;
-        lastDistance = Vector2.Distance(transform.position, targetPoint);
-
-        SetDirection(playerMovement);
-        automaticMovement = true;
-        SetMovement(HALCharacterMovementTypes.Automatic);
-    }
-
-    // MOVEMENTS END
-    #endregion 
-
+    
     private void Interact()
     {
         if (isHidding)
@@ -344,5 +239,5 @@ public class PlayerController : MonoBehaviour {
             GameController.Instance.OnPlayerLose();
         }
     }
-
+*/
 }
