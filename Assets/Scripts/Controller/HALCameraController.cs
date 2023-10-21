@@ -11,7 +11,7 @@ public enum CameraMovement
 {
     Fixed,
     Horizontal,
-    Vertical
+    Forward
 }
 
 public class CameraController : MonoBehaviour
@@ -28,10 +28,18 @@ public class CameraController : MonoBehaviour
     //private Vector2 targetPoint;
     private float distance;
     private Action currentMovement;
+
+    private Vector3 offset;
     // Start is called before the first frame update
     void Start()
     {
-        cameraMovement = transform.position;
+        if (playerPosition == null)
+        {
+            playerPosition = FindAnyObjectByType<HALPlayerController>().transform;
+        }
+        
+        offset = transform.position;
+        cameraMovement = transform.position - playerPosition.transform.position;
         SetMovement(cameraMovimentation);
     }
 
@@ -58,16 +66,27 @@ public class CameraController : MonoBehaviour
     {
         if (playerPosition.position.x < minPosition || playerPosition.position.x > maxPosition)
             return;
-        cameraMovement.x = playerPosition.position.x;
-        cameraMovement.z = -10;
+        /*
+        cameraMovement.x = playerPosition.position.x + offset.x;
+        cameraMovement.y = offset.y;
+        cameraMovement.z = offset.z;*/
+
+        cameraMovement = offset;
+        cameraMovement.x += playerPosition.position.x;
+        
         transform.position = cameraMovement;
     }
-    private void VerticalMovement()
+    private void ForwardMovement()
     {
-        if (playerPosition.position.y < minPosition || playerPosition.position.y > maxPosition)
+        if (playerPosition.position.z < minPosition || playerPosition.position.z > maxPosition)
             return;
-        cameraMovement.y = playerPosition.position.y;
-        cameraMovement.z = -10;
+        /*
+        cameraMovement.z = playerPosition.position.z + offset.z;
+        cameraMovement.y = -offset.y;
+        */
+        cameraMovement = offset;
+        cameraMovement.z += playerPosition.position.z;
+        
         transform.position = cameraMovement;
     }
     private void SetMovement(CameraMovement movement)
@@ -81,8 +100,8 @@ public class CameraController : MonoBehaviour
             case CameraMovement.Horizontal:
                 currentMovement = () => HorizontalMovement();
                 break;
-            case CameraMovement.Vertical:
-                currentMovement = () => VerticalMovement();
+            case CameraMovement.Forward:
+                currentMovement = () => ForwardMovement();
                 break;
             default:
                 break;
@@ -116,7 +135,7 @@ public class CameraController : MonoBehaviour
             minPosition = min.x;
             maxPosition = max.x;
         }
-        else if (cameraMovimentation == CameraMovement.Vertical)
+        else if (cameraMovimentation == CameraMovement.Forward)
         {
             cameraMovement.x = min.x;
             minPosition = min.y;
