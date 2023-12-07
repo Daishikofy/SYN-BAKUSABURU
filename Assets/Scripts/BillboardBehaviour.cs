@@ -1,17 +1,17 @@
 using UnityEngine;
 
-public class HALBillboardBehaviour : MonoBehaviour
+public class BillboardBehaviour : MonoBehaviour
 {
-    private Camera camera;
+    private Camera _camera;
 
     private void Start()
     {
-        camera = Camera.main;
+        _camera = Camera.main;
     }
 
     void LateUpdate()
     {
-        transform.rotation = camera.transform.rotation;
+        transform.rotation = _camera.transform.rotation;
         //transform.rotation = Quaternion.Euler(0.0f, camera.transform.rotation.eulerAngles.y, 0.5f);
     }
 }
