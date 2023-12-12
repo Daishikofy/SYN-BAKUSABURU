@@ -27,6 +27,10 @@ public class MovementComponent : MonoBehaviour
         _rigidbody.MovePosition(rbPosition);
     }
 
+    public Vector3 GetMovementDirection()
+    {
+        return _movementDirection;
+    }
     public void SetMovementDirection(Vector3 movementDirection)
     {
         _movementDirection = movementDirection.normalized;
