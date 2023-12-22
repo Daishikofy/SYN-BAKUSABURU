@@ -59,7 +59,7 @@ public class CameraController : MonoBehaviour
 
     private void UpdateTopDown()
     {
-        transform.position = PlayerTransform.position + _offset;
+        TopDownContainer.position = PlayerTransform.position + _offset;
     }
 
     public void SetTopDownCamera()

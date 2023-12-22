@@ -22,31 +22,47 @@ public class PlayerController : MonoBehaviour
         FadeImage.SetAlpha(0.0f);
     }
 
-    public void Move(InputAction.CallbackContext context)
+    public void Move(InputAction.CallbackContext context) //Input system
     {
         Vector2 input = context.ReadValue<Vector2>();
         Vector3 movementDirection = new Vector3(input.x, .0f, input.y);
         PlayerMovementComponent.SetMovementDirection(movementDirection);
     }
 
-    public void Interact(InputAction.CallbackContext context)
+    public void Interact(InputAction.CallbackContext context) //Input system
     {
         if (context.phase == InputActionPhase.Started)
         {
-            Hide();
+            HideoutController closestHidingPoint = null;
+            float minDistance = 5f;
+            HideoutController[] hideoutControllers = FindObjectsByType<HideoutController>(sortMode:FindObjectsSortMode.None);
+            foreach (var hideoutController in hideoutControllers)
+            {
+                float distance = Vector3.Distance(hideoutController.transform.position, transform.position);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestHidingPoint = hideoutController;
+                }
+            }
+
+            if (closestHidingPoint != null)
+            {
+                closestHidingPoint.Interact(this);
+            }
         }
     }
 
     //TODO : HidingComponent
-    private void Hide()
+    public void Hide(Vector3 newPosition, Quaternion newRotation)
     {
         //TODO : disable player controller, switch to small camera controller? 
-        //TODO : Switch camera
         _isHiding = !_isHiding;
-        RepositionCamera();
+
+        RepositionPlayer(newPosition, newRotation);
     }
 
-    private async void RepositionCamera()
+    private async void RepositionPlayer(Vector3 newPosition, Quaternion newRotation)
     {
         float alpha = 0.0f; 
         while (alpha < 1.0f)
@@ -55,20 +71,7 @@ public class PlayerController : MonoBehaviour
             alpha += 0.05f;
             await Task.Delay(1);
         }
-        
-        SwitchCamera();
-        
-        await Task.Delay(10);
-        while (alpha >= 0.0f)
-        {
-            FadeImage.SetAlpha(alpha);
-            alpha -= 0.05f;
-            await Task.Delay(1);
-        }
-    }
 
-    private void SwitchCamera()
-    {
         if (_isHiding)
         {
             Renderer.enabled = false;
@@ -78,6 +81,17 @@ public class PlayerController : MonoBehaviour
         {
             Renderer.enabled = true;
             CameraController.Instance.SetTopDownCamera();
+        }
+        
+        transform.position = newPosition;
+        transform.rotation = newRotation;
+
+        await Task.Delay(10);
+        while (alpha >= 0.0f)
+        {
+            FadeImage.SetAlpha(alpha);
+            alpha -= 0.05f;
+            await Task.Delay(1);
         }
     }
 }
