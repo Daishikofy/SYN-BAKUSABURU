@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Components;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,6 +17,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private SpriteRenderer Renderer;
     [SerializeField] private CanvasRenderer FadeImage;
     private bool _isHiding = false;
+    
+    // _ _ TODO Holding Component _ _ _ _ _ _ _ _ _ _  _ _ _ _ _ 
+    [SerializeField] private Joint HoldingJoint;
 
     private void Start()
     {
@@ -28,29 +32,57 @@ public class PlayerController : MonoBehaviour
         Vector3 movementDirection = new Vector3(input.x, .0f, input.y);
         PlayerMovementComponent.SetMovementDirection(movementDirection);
     }
-
+    
     public void Interact(InputAction.CallbackContext context) //Input system
     {
         if (context.phase == InputActionPhase.Started)
         {
-            HideoutController closestHidingPoint = null;
-            float minDistance = 5f;
-            HideoutController[] hideoutControllers = FindObjectsByType<HideoutController>(sortMode:FindObjectsSortMode.None);
-            foreach (var hideoutController in hideoutControllers)
+            if (TryHide())
             {
-                float distance = Vector3.Distance(hideoutController.transform.position, transform.position);
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    closestHidingPoint = hideoutController;
-                }
+                return;
             }
 
-            if (closestHidingPoint != null)
+            if (TryHold())
             {
-                closestHidingPoint.Interact(this);
+                return;
             }
         }
+    }
+
+    private bool TryHide()
+    {
+        HideoutController closestHidingPoint = null;
+        float minDistance = 5f;
+        HideoutController[] hideoutControllers = FindObjectsByType<HideoutController>(sortMode:FindObjectsSortMode.None);
+        foreach (var hideoutController in hideoutControllers)
+        {
+            float distance = Vector3.Distance(hideoutController.transform.position, transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestHidingPoint = hideoutController;
+            }
+        }
+
+        if (closestHidingPoint != null)
+        {
+            closestHidingPoint.Interact(this);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryHold()
+    {
+        Vector3 origin = PlayerMovementComponent.Rigidbody.position;
+        Vector3 movementDirection = PlayerMovementComponent.MovementDirection;
+        RaycastHit hitInfo;
+        var result = Physics.Raycast(origin, movementDirection, out hitInfo, 4f);
+
+        Debug.Log(hitInfo.rigidbody.gameObject.name);
+        
+        return false;
     }
 
     //TODO : HidingComponent
