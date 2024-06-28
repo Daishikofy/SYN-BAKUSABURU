@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using TOWER.Components;
 using UnityEngine;
 
 namespace TOWER
@@ -8,33 +6,35 @@ namespace TOWER
     public class TOW_ProjectileController : MonoBehaviour
 {
     [Header("Movement")]
-    public Rigidbody2D Rb;
-    public float Velocity = 100f;
-    private Vector2 m_MovementDirection = Vector2.zero;
+    public Rigidbody2D physicComponent;
+    public float velocity = 100f;
+    private Vector2 _movementDirection = Vector2.zero;
+    
+    private int _damage = 1;
+    private string _targetTag = "";
 
-    [Header("Attack")]
-    public int Damage = 1;
-
-    private float m_LifeRange = 1f;
-    private Vector2 m_SpawnedPosition;
+    private float _lifeRange = 1f;
+    private Vector2 _spawnedPosition;
 
     private void Awake()
     {
-        m_SpawnedPosition = transform.position;
+        _spawnedPosition = transform.position;
     }
 
-    public void Initialize(Vector2 movementDirection, float lifeRange)
+    public void Initialize(Vector2 movementDirection, float lifeRange, int damage, string targetTag)
     {
-        m_MovementDirection = movementDirection;
-        m_LifeRange = lifeRange;
+        _movementDirection = movementDirection;
+        _lifeRange = lifeRange;
+        _damage = damage;
+        _targetTag = targetTag;
     }
 
     private void FixedUpdate()
     {
-        Rb.AddForce(m_MovementDirection * Velocity, ForceMode2D.Force);
+        physicComponent.AddForce(_movementDirection * velocity, ForceMode2D.Force);
         
-        m_LifeRange -= Time.deltaTime;
-        if (m_LifeRange <= Vector2.Distance(transform.position, m_SpawnedPosition))
+        _lifeRange -= Time.deltaTime;
+        if (_lifeRange <= Vector2.Distance(transform.position, _spawnedPosition))
         {
             Destroy(gameObject);
         }
@@ -43,10 +43,9 @@ namespace TOWER
     private void OnTriggerEnter2D(Collider2D col)
     {
         Debug.Log("Trigger with: " + col.gameObject);
-        if (col.CompareTag("Enemy"))
+        if (col.CompareTag(_targetTag))
         {
-            TOW_EnemyController enemyController = col.gameObject.GetComponent<TOW_EnemyController>();
-            enemyController.ReceiveDamage(Damage);
+            col.gameObject.GetComponent<TOW_HealthComponent>()?.Damage(_damage);
             Destroy(gameObject);
         }
     }
