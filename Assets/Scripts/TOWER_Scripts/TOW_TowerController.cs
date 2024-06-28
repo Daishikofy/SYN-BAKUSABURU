@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,26 +6,28 @@ namespace TOWER
 {
     public class TOW_TowerController : MonoBehaviour
 {
-    public TOW_ProjectileController ProjectilePrefab;
-    public float ShootRate = 1f;
-    public float DetectionRange = 3f;
+    public TOW_ProjectileController projectilePrefab;
+    public float shootRate = 1f;
+    public int projectileDamage = 1;
+    public float detectionRange = 3f;
+    public string targetTag = "";
 
-    private float m_ShootTimer = 0f;
-    private List<TOW_ProjectileController> m_Projectiles;
+    private float _shootTimer;
+    private List<TOW_ProjectileController> _projectiles;
 
     private void Start()
     {
-        m_Projectiles = new List<TOW_ProjectileController>();
+        _projectiles = new List<TOW_ProjectileController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_ShootTimer += Time.deltaTime;
-        if (m_ShootTimer >= ShootRate)
+        _shootTimer += Time.deltaTime;
+        if (_shootTimer >= shootRate)
         {
             SpawnProjectile();
-            m_ShootTimer = 0f;
+            _shootTimer = 0f;
         }
     }
 
@@ -40,7 +40,7 @@ namespace TOWER
     public void DisableTower()
     {
         gameObject.SetActive(false);
-        foreach (TOW_ProjectileController projectile in m_Projectiles)
+        foreach (TOW_ProjectileController projectile in _projectiles)
         {
             Destroy(projectile.gameObject);
         }
@@ -51,14 +51,15 @@ namespace TOWER
         //Todo: Pooling system
         Transform parentTransform = transform;
         List<TOW_EnemyController> enemiesInRange =
-            TOW_GameManager.Instance.GetEnemiesInRange(parentTransform.position, DetectionRange);
+            TOW_GameManager.Instance.GetEnemiesInRange(parentTransform.position, detectionRange);
 
         if (enemiesInRange.Count > 0)
         {
-            TOW_ProjectileController projectile = Instantiate(ProjectilePrefab, parentTransform.position, Quaternion.identity, parentTransform);
+            TOW_ProjectileController projectile = Instantiate(projectilePrefab, parentTransform.position, Quaternion.identity, parentTransform);
             Vector2 projectileDirection = enemiesInRange[Random.Range(0, enemiesInRange.Count)].transform.position -
                                           transform.position;
-            projectile.Initialize(projectileDirection, DetectionRange);
+            projectile.Initialize(projectileDirection, detectionRange, projectileDamage, targetTag);
+            //_projectiles.Add(projectile);
         }
     }
 }

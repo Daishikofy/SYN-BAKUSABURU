@@ -1,38 +1,35 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 namespace TOWER
 {
     public class TOW_GameManager : MonoBehaviour
     {
-        private static TOW_GameManager m_Instance;
-        public static TOW_GameManager Instance => m_Instance;
+        private static TOW_GameManager _instance;
+        public static TOW_GameManager Instance => _instance;
 
-        public TOW_EnemyController[] Enemies;
-        private int m_EnemyCount;
+        public TOW_EnemyController[] enemies;
+        private int _enemyCount;
 
         private void Awake()
         {
-            if (m_Instance != null)
+            if (_instance != null)
             {
                 Destroy(this);
             }
             else
             {
-                m_Instance = this;
+                _instance = this;
             }
 
-            m_EnemyCount = Enemies.Length;
+            _enemyCount = enemies.Length;
         }
 
         public List<TOW_EnemyController> GetEnemiesInRange(Vector2 position, float range)
         {
             List<TOW_EnemyController> enemiesInRange = new List<TOW_EnemyController>();
-            for (int i = 0; i < m_EnemyCount; i++)
+            for (int i = 0; i < _enemyCount; i++)
             {
-                TOW_EnemyController enemy = Enemies[i];
+                TOW_EnemyController enemy = enemies[i];
                 if (Vector2.Distance(position, enemy.transform.position) <= range)
                 {
                     enemiesInRange.Add(enemy);
@@ -44,14 +41,14 @@ namespace TOWER
 
         public void OnEnemyDefeated(TOW_EnemyController enemy)
         {
-            for (int i = 0; i < m_EnemyCount; i++)
+            for (int i = 0; i < _enemyCount; i++)
             {
-                if (i != m_EnemyCount - 1 && Enemies[i] == enemy )
+                if (i != _enemyCount - 1 && enemies[i] == enemy )
                 {
-                    Enemies[i] = Enemies[m_EnemyCount - 1];
+                    enemies[i] = enemies[_enemyCount - 1];
                 }
             }
-            m_EnemyCount -= 1;
+            _enemyCount -= 1;
         }
     }
 }

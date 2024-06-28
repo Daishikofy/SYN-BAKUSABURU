@@ -47,9 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10b7524fb3ad24242bcae0b727d15bbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rb: {fileID: 2633811333767512632}
-  Velocity: 100
-  Damage: 1
+  physicComponent: {fileID: 2633811333767512632}
+  velocity: 100
 --- !u!58 &1417455949924453488
 CircleCollider2D:
   m_ObjectHideFlags: 0
