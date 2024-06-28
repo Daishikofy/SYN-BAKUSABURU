@@ -1,26 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
+using TOWER.Components;
 using UnityEngine;
 
 namespace TOWER
 {
+    [RequireComponent(typeof(Rigidbody2D),typeof(TOW_HealthComponent))]
     public class TOW_EnemyController : MonoBehaviour
     {
-        public int MaxLife = 3;
-        private int m_CurrentLife;
+        public Rigidbody2D physicComponent;
+        public TOW_HealthComponent healthComponent;
+
+        [Header("Attack")] public int damage = 1;
+
+        public float attackRate = 2f;
+        private float _attackTimer;
+        public float velocity = 100f;
+        public Transform target;
 
         private void Awake()
         {
-            m_CurrentLife = MaxLife;
+            healthComponent.onDefeated.AddListener(Death);
         }
 
-        public void ReceiveDamage(int damage)
+        private void FixedUpdate()
         {
-            m_CurrentLife -= damage;
-            if (m_CurrentLife <= 0)
+            Vector2 movementDirection = target.position - transform.position;
+            if (movementDirection.magnitude > 1f)
             {
-                Death();
+                physicComponent.AddForce(movementDirection.normalized * velocity, ForceMode2D.Force);
             }
+            else
+            {
+                _attackTimer += Time.deltaTime;
+                if (_attackTimer >= attackRate)
+                {
+                    Attack();
+                }
+            }
+        }
+
+        private void Attack()
+        {
+            _attackTimer = 0f;
+            target.gameObject.GetComponent<TOW_HealthComponent>()?.Damage(damage);
         }
 
         private void Death()
