@@ -50,8 +50,6 @@ namespace TOWER
                 enemies.Add(enemy);
             }
             _enemyCount++;
-            
-            Debug.Log("List capacity: " + enemies.Count + " _ _ _ Enemy Count: " + _enemyCount);
         }
 
         public void OnEnemyDefeated(TOW_EnemyController enemy)

@@ -8,29 +8,36 @@ namespace TOWER
     [Header("Movement")]
     public Rigidbody2D physicComponent;
     public float velocity = 100f;
-    private Vector2 _movementDirection = Vector2.zero;
+    private Transform _target;
     
     private int _damage = 1;
     private string _targetTag = "";
 
     private float _lifeRange = 1f;
     private Vector2 _spawnedPosition;
+    private Vector2 _movementDirection;
 
     private void Awake()
     {
         _spawnedPosition = transform.position;
     }
 
-    public void Initialize(Vector2 movementDirection, float lifeRange, int damage, string targetTag)
+    public void Initialize(Transform targetTransform, float lifeRange, int damage, string targetTag)
     {
-        _movementDirection = movementDirection;
+        _target = targetTransform;
         _lifeRange = lifeRange;
         _damage = damage;
         _targetTag = targetTag;
+        _movementDirection = (_target.position - transform.position).normalized;
     }
 
     private void FixedUpdate()
     {
+        if (_target)
+        {
+            _movementDirection = (_target.position - transform.position).normalized;
+        }
+        
         physicComponent.AddForce(_movementDirection * velocity, ForceMode2D.Force);
         
         _lifeRange -= Time.deltaTime;

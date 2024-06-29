@@ -53,9 +53,8 @@ namespace TOWER
         if (enemiesInRange.Count > 0)
         {
             TOW_ProjectileController projectile = Instantiate(projectilePrefab, parentTransform.position, Quaternion.identity, _projectilesHolder);
-            Vector2 projectileDirection = enemiesInRange[Random.Range(0, enemiesInRange.Count)].transform.position -
-                                          transform.position;
-            projectile.Initialize(projectileDirection, detectionRange, projectileDamage, targetTag);
+            Transform projectileTarget = enemiesInRange[Random.Range(0, enemiesInRange.Count)].transform;
+            projectile.Initialize(projectileTarget, detectionRange, projectileDamage, targetTag);
         }
     }
 }
