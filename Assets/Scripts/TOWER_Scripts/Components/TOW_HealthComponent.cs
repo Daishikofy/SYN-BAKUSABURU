@@ -12,13 +12,13 @@ namespace TOWER.Components
         
         [Header("Callbacks")]
         public UnityEvent onDefeated;
+        
+       private void Awake()
+       {
+           CurrentHealth = maxHealth;
+       }
 
-        public TOW_HealthComponent()
-        {
-            CurrentHealth = maxHealth;
-        }
-
-        public void Damage(int damages)
+       public void Damage(int damages)
         {
             if (IsAlive())
             {

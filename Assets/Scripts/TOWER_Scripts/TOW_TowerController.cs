@@ -52,14 +52,13 @@ namespace TOWER
         Transform parentTransform = transform;
         List<TOW_EnemyController> enemiesInRange =
             TOW_GameManager.Instance.GetEnemiesInRange(parentTransform.position, detectionRange);
-
         if (enemiesInRange.Count > 0)
         {
             TOW_ProjectileController projectile = Instantiate(projectilePrefab, parentTransform.position, Quaternion.identity, parentTransform);
             Vector2 projectileDirection = enemiesInRange[Random.Range(0, enemiesInRange.Count)].transform.position -
                                           transform.position;
             projectile.Initialize(projectileDirection, detectionRange, projectileDamage, targetTag);
-            //_projectiles.Add(projectile);
+            _projectiles.Add(projectile);
         }
     }
 }

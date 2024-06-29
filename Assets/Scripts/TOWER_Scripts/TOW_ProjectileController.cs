@@ -42,7 +42,6 @@ namespace TOWER
     
     private void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Trigger with: " + col.gameObject);
         if (col.CompareTag(_targetTag))
         {
             col.gameObject.GetComponent<TOW_HealthComponent>()?.Damage(_damage);
