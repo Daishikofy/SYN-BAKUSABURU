@@ -16,6 +16,10 @@ namespace TOWER
         public float velocity = 100f;
         public Transform target;
 
+        public void Initialize(Transform targetedTransform)
+        {
+            target = targetedTransform;
+        }
         private void Awake()
         {
             healthComponent.onDefeated.AddListener(Death);

@@ -7,7 +7,7 @@ namespace TOWER
         private static TOW_GameManager _instance;
         public static TOW_GameManager Instance => _instance;
 
-        public TOW_EnemyController[] enemies;
+        public List<TOW_EnemyController> enemies;
         private int _enemyCount;
 
         private void Awake()
@@ -21,7 +21,7 @@ namespace TOWER
                 _instance = this;
             }
 
-            _enemyCount = enemies.Length;
+            _enemyCount = enemies.Count;
         }
 
         public List<TOW_EnemyController> GetEnemiesInRange(Vector2 position, float range)
@@ -37,6 +37,21 @@ namespace TOWER
             }
 
             return enemiesInRange;
+        }
+
+        public void OnEnemySpawned(TOW_EnemyController enemy)
+        {
+            if (enemies.Count > _enemyCount)
+            {
+                enemies[_enemyCount] = enemy;
+            }
+            else
+            {
+                enemies.Add(enemy);
+            }
+            _enemyCount++;
+            
+            Debug.Log("List capacity: " + enemies.Count + " _ _ _ Enemy Count: " + _enemyCount);
         }
 
         public void OnEnemyDefeated(TOW_EnemyController enemy)
