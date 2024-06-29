@@ -7,18 +7,16 @@ namespace TOWER
     public class TOW_TowerController : MonoBehaviour
 {
     public TOW_ProjectileController projectilePrefab;
+    [SerializeField]
+    private Transform _projectilesHolder;
     public float shootRate = 1f;
     public int projectileDamage = 1;
     public float detectionRange = 3f;
     public string targetTag = "";
 
     private float _shootTimer;
-    private List<TOW_ProjectileController> _projectiles;
-
-    private void Start()
-    {
-        _projectiles = new List<TOW_ProjectileController>();
-    }
+    [SerializeField]
+    
 
     // Update is called once per frame
     void Update()
@@ -40,7 +38,7 @@ namespace TOWER
     public void DisableTower()
     {
         gameObject.SetActive(false);
-        foreach (TOW_ProjectileController projectile in _projectiles)
+        foreach (Transform projectile in _projectilesHolder)
         {
             Destroy(projectile.gameObject);
         }
@@ -54,11 +52,10 @@ namespace TOWER
             TOW_GameManager.Instance.GetEnemiesInRange(parentTransform.position, detectionRange);
         if (enemiesInRange.Count > 0)
         {
-            TOW_ProjectileController projectile = Instantiate(projectilePrefab, parentTransform.position, Quaternion.identity, parentTransform);
+            TOW_ProjectileController projectile = Instantiate(projectilePrefab, parentTransform.position, Quaternion.identity, _projectilesHolder);
             Vector2 projectileDirection = enemiesInRange[Random.Range(0, enemiesInRange.Count)].transform.position -
                                           transform.position;
             projectile.Initialize(projectileDirection, detectionRange, projectileDamage, targetTag);
-            _projectiles.Add(projectile);
         }
     }
 }
