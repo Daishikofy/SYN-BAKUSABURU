@@ -149,20 +149,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad04a4926734c1cb32842c5db88e70f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefabs:
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  spawnRate: 5
+  wave: []
   target: {fileID: 1068818718}
+  onWaveEnded:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &123589660
 Transform:
   m_ObjectHideFlags: 0
@@ -2533,65 +2524,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98065e73db2f0c246823ce504c6450bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPoints:
+  - {fileID: 123589659}
+  levelScenario: {fileID: 11400000, guid: 6fcc8af77c4cfbc45b8d534a3547c39a, type: 2}
   enemies: []
---- !u!1 &678943079
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 678943081}
-  - component: {fileID: 678943080}
-  m_Layer: 0
-  m_Name: Spawner (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &678943080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 678943079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ad04a4926734c1cb32842c5db88e70f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnPrefabs:
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  - {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
-  spawnRate: 3
-  target: {fileID: 1068818718}
---- !u!4 &678943081
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 678943079}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.78, y: 5.11, z: -0.045715395}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &749480691
 GameObject:
   m_ObjectHideFlags: 0
@@ -3150,4 +3086,3 @@ SceneRoots:
   - {fileID: 1506382728}
   - {fileID: 1068818718}
   - {fileID: 123589660}
-  - {fileID: 678943081}
