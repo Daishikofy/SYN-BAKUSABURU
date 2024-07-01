@@ -7,20 +7,17 @@ namespace TOWER
 {
     public class TOW_SpawnPointController : MonoBehaviour
     {
-        [SerializeField] 
-        private TOW_EnemySpawnSequence[] wave;
-        
         public Transform target;
+        
+        private TOW_SpawnSequence[] _sequence;
         
         private float _spawnTimer;
         private int _currentItem;
         private int _currentSequence;
-
-        public UnityEvent onWaveEnded = new UnityEvent();
-
-        public void SetupWave(TOW_EnemySpawnSequence[] spawnSequences)
+        
+        public void SetupWave(TOW_SpawnSequence[] spawnSequences)
         {
-            wave = spawnSequences;
+            _sequence = spawnSequences;
             _currentItem = 0;
             _currentSequence = 0;
             _spawnTimer = 0f;
@@ -28,12 +25,12 @@ namespace TOWER
         
         private void Update()
         {
-            if (_currentSequence < wave.Length)
+            if (_currentSequence < _sequence.Length)
             {
                 _spawnTimer += Time.deltaTime;
-                if (_spawnTimer >= wave[_currentSequence].spawnRate)
+                if (_spawnTimer >= _sequence[_currentSequence].spawnRate)
                 {
-                    if (_currentItem < wave[_currentSequence].amount)
+                    if (_currentItem < _sequence[_currentSequence].amount)
                     {
                         Spawn();
                         _currentItem++;
@@ -43,10 +40,6 @@ namespace TOWER
                     {
                         _currentSequence++;
                         _currentItem = 0;
-                        if (_currentSequence >= wave.Length)
-                        {
-                            onWaveEnded.Invoke();
-                        }
                     }
                 }
             }
@@ -54,7 +47,7 @@ namespace TOWER
 
         private void Spawn()
         {
-            TOW_EnemyController enemy = Instantiate(wave[_currentSequence].enemyPrefab, 
+            TOW_EnemyController enemy = Instantiate(_sequence[_currentSequence].enemyPrefab, 
                     transform.position, 
                     quaternion.identity, 
                     transform);

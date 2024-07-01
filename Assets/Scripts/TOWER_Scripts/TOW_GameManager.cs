@@ -9,12 +9,15 @@ namespace TOWER
         private static TOW_GameManager _instance;
         public static TOW_GameManager Instance => _instance;
 
-        [SerializeField] private TOW_SpawnPointController[] spawnPoints;
+        [Header("Managers")] 
+        [SerializeField] private TOW_SpawnPointManager spawnPointManager;
+
+        [Header("Waves parameters")]
         [SerializeField] private TOW_LevelScenario levelScenario;
 
-        public List<TOW_EnemyController> enemies;
-        private int _enemyCount;
-        private int _currentWave;
+        private int _currentWaveId;
+
+
 
         private void Awake()
         {
@@ -26,8 +29,6 @@ namespace TOWER
             {
                 _instance = this;
             }
-
-            _enemyCount = enemies.Count;
         }
 
         private void Start()
@@ -35,61 +36,37 @@ namespace TOWER
             StartPlayingLevel();
         }
 
+        // _ _ _ _ _ LEVEL SCENARIO _ _ _ _ _ _
         private void StartPlayingLevel()
         {
-            spawnPoints[0].SetupWave(levelScenario.enemyWaves[_currentWave].enemySpawnSequences);
-            spawnPoints[0].onWaveEnded.AddListener(OnWaveEnded);
+            _currentWaveId = 0;
+            spawnPointManager.InitializeCurrentWave(levelScenario.enemyWaves[_currentWaveId]);
         }
 
-        private void OnWaveEnded()
+        public void OnWaveEnded()
         {
-            _currentWave++;
-            if (_currentWave < levelScenario.enemyWaves.Length)
+            _currentWaveId++;
+            if (_currentWaveId < levelScenario.enemyWaves.Length)
             {
-                spawnPoints[0].SetupWave(levelScenario.enemyWaves[_currentWave].enemySpawnSequences);
+                spawnPointManager.InitializeCurrentWave(levelScenario.enemyWaves[_currentWaveId]);
             }
         }
 
+        // _ _ _ _ _ ENEMIES _ _ _ _ _ _
         public List<TOW_EnemyController> GetEnemiesInRange(Vector2 position, float range)
         {
-            List<TOW_EnemyController> enemiesInRange = new List<TOW_EnemyController>();
-            for (int i = 0; i < _enemyCount; i++)
-            {
-                TOW_EnemyController enemy = enemies[i];
-                if (Vector2.Distance(position, enemy.transform.position) <= range)
-                {
-                    enemiesInRange.Add(enemy);
-                }
-            }
-
-            return enemiesInRange;
+            return spawnPointManager.GetEnemiesInRange(position, range);
         }
-
-        public void OnEnemySpawned(TOW_EnemyController enemy)
-        {
-            if (enemies.Count > _enemyCount)
-            {
-                enemies[_enemyCount] = enemy;
-            }
-            else
-            {
-                enemies.Add(enemy);
-            }
-
-            _enemyCount++;
-        }
+        
 
         public void OnEnemyDefeated(TOW_EnemyController enemy)
         {
-            for (int i = 0; i < _enemyCount; i++)
-            {
-                if (i != _enemyCount - 1 && enemies[i] == enemy)
-                {
-                    enemies[i] = enemies[_enemyCount - 1];
-                }
-            }
-
-            _enemyCount -= 1;
+            spawnPointManager.OnEnemyDefeated(enemy);
+        }
+        
+        public void OnEnemySpawned(TOW_EnemyController enemy)
+        {
+            spawnPointManager.OnEnemySpawned(enemy);
         }
     }
 }
