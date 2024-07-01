@@ -53,8 +53,20 @@ namespace TOWER
         if (enemiesInRange.Count > 0)
         {
             TOW_ProjectileController projectile = Instantiate(projectilePrefab, parentTransform.position, Quaternion.identity, _projectilesHolder);
-            Transform projectileTarget = enemiesInRange[Random.Range(0, enemiesInRange.Count)].transform;
-            projectile.Initialize(projectileTarget, detectionRange, projectileDamage, targetTag);
+            
+            int closestTarget = 0;
+            float closestDistance = Vector2.Distance(transform.position, enemiesInRange[closestTarget].transform.position);
+            for (int i = 1; i < enemiesInRange.Count; i++)
+            {
+                float distance = Vector2.Distance(transform.position, enemiesInRange[i].transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestTarget = i;
+                }
+            }
+            
+            projectile.Initialize(enemiesInRange[closestTarget].transform, detectionRange, projectileDamage, targetTag);
         }
     }
 }
