@@ -37,7 +37,7 @@ MonoBehaviour:
         amount: 5
         spawnRate: 1
   - spawnPointsSequences:
-    - spawnPointId: 1
+    - spawnPointId: 0
       spawnSequences:
       - enemyPrefab: {fileID: 5468934242191099517, guid: a9282aebd32396d4f93c141ae66813c1, type: 3}
         amount: 5

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,9 @@ public class TOW_PlayerContoller : MonoBehaviour
 
     private Vector2 _movementDirection = Vector2.zero;
 
+    [Header("Interaction Variables")] [SerializeField]
+    private float maxInteractionDistance = 2;
+    
     [Header("Attack Variables")] 
     public List<TOW_TowerController> towers;
     private List<int> _availableTowers;
@@ -28,6 +32,8 @@ public class TOW_PlayerContoller : MonoBehaviour
         {
             _availableTowers.Add(i);
         }
+        
+        TOW_UIManager.Instance.UpdateTowerCount(towers.Count);
     }
 
     // Update is called once per frame
@@ -46,12 +52,42 @@ public class TOW_PlayerContoller : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
+            Vector2 currentPosition = transform.position;
+           
+            //Interact
+            var interactableComponents = FindObjectsByType<TOW_InteractableComponent>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            
+            if (interactableComponents.Length > 0)
+            {
+                int closestComponentId = 0;
+                float minDistance = Vector2.Distance(currentPosition,
+                    interactableComponents[closestComponentId].transform.position);
+                for (int i = 1; i < interactableComponents.Length; i++)
+                {
+                    float distance = Vector2.Distance(currentPosition,
+                        interactableComponents[i].transform.position);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestComponentId = i;
+                    }
+                }
+
+                if (minDistance <= maxInteractionDistance)
+                {
+                    interactableComponents[closestComponentId].Interact();
+                    return;
+                }
+            }
+
+            
+            //Place / Remove tower
             for (int i = 0; i < _placedTowers.Count; i++)
             {
                 int towerIndex = _placedTowers[i];
                 TOW_TowerController tower = towers[_placedTowers[i]];
                 
-                if (Vector2.Distance(tower.transform.position, transform.position) <= rangeToGrabTower)
+                if (Vector2.Distance(tower.transform.position, currentPosition) <= rangeToGrabTower)
                 {
                     tower.DisableTower();
                     _availableTowers.Add(towerIndex);
@@ -66,10 +102,22 @@ public class TOW_PlayerContoller : MonoBehaviour
                 int towerIndex = _availableTowers[0];
                 TOW_TowerController tower = towers[_availableTowers[0]];
                 _placedTowers.Add(towerIndex);
-                tower.EnableTower(transform.position);
+                tower.EnableTower(currentPosition);
                 
                 _availableTowers.RemoveAt(0);
             }
+        }
+    }
+
+    public void BuyTower()
+    {
+        if (TOW_GameManager.Instance.CanBuyTower())
+        {
+            TOW_TowerController newTower = Instantiate(towers[0]);
+            newTower.DisableTower();
+            towers.Add(newTower);
+            _availableTowers.Add(towers.Count - 1);
+            TOW_UIManager.Instance.UpdateTowerCount(towers.Count);
         }
     }
 

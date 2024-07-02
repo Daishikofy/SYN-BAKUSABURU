@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   physicComponent: {fileID: 2633811333767512632}
-  velocity: 100
+  velocity: 200
 --- !u!58 &1417455949924453488
 CircleCollider2D:
   m_ObjectHideFlags: 0

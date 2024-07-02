@@ -163,7 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 5243642577419479275, guid: 18c70b8734e43354fa7f1ec826c03a77, type: 3}
   _projectilesHolder: {fileID: 8809443140928130480}
-  shootRate: 1
+  shootRate: 0.37
   projectileDamage: 1
   detectionRange: 3
   targetTag: Enemy

@@ -14,6 +14,11 @@ namespace TOWER
 
         [SerializeField] private TOW_UIManager uiManager;
 
+        [Header("Towers")] 
+        [SerializeField]  private TOW_TowerController towerPrefab;
+
+        [SerializeField] private int towerPrice = 10;
+
         [Header("Waves parameters")]
         [SerializeField] private TOW_LevelScenario levelScenario;
 
@@ -79,6 +84,18 @@ namespace TOWER
         public void OnEnemySpawned(TOW_EnemyController enemy)
         {
             spawnPointManager.OnEnemySpawned(enemy);
+        }
+        
+        // _ _ _ _ _ TOWERS _ _ _ _ _ _
+        public bool CanBuyTower()
+        {
+            if (CurrencyAmount >= towerPrice)
+            {
+                CurrencyAmount -= towerPrice;
+                return true;
+            }
+
+            return false;
         }
     }
 }
