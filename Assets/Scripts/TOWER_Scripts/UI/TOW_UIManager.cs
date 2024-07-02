@@ -1,0 +1,35 @@
+﻿using System;
+using UnityEngine;
+
+namespace TOWER
+{
+    public class TOW_UIManager : MonoBehaviour
+    {
+        private static TOW_UIManager _instance;
+        public static TOW_UIManager Instance => _instance;
+
+        [SerializeField] private TOW_DebugInfoPanel debugInfoPanel;
+
+        private void Awake()
+        {
+            if (_instance != null)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                _instance = this;
+            }
+        }
+
+        public void UpdateCurrency(int value)
+        {
+            debugInfoPanel.UpdateCurrency(value);
+        }
+        
+        public void UpdateTowerCount(int value)
+        {
+            debugInfoPanel.UpdateTowerCount(value);
+        }
+    }
+}
