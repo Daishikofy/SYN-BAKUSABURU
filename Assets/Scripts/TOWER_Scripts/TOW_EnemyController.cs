@@ -9,6 +9,7 @@ namespace TOWER
         public Rigidbody2D physicComponent;
         public TOW_HealthComponent healthComponent;
 
+        [Header("Loot")] public int currencyDrop = 1;
         [Header("Attack")] public int damage = 1;
 
         public float attackRate = 2f;

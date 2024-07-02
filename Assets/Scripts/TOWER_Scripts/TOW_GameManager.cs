@@ -12,12 +12,22 @@ namespace TOWER
         [Header("Managers")] 
         [SerializeField] private TOW_SpawnPointManager spawnPointManager;
 
+        [SerializeField] private TOW_UIManager uiManager;
+
         [Header("Waves parameters")]
         [SerializeField] private TOW_LevelScenario levelScenario;
 
         private int _currentWaveId;
 
-
+        private int _currencyAmount = 0;
+        public int CurrencyAmount {
+            get { return _currencyAmount; }
+            set
+            {
+                _currencyAmount = value;
+                uiManager.UpdateCurrency(_currencyAmount);
+            }
+        }
 
         private void Awake()
         {
@@ -33,6 +43,7 @@ namespace TOWER
 
         private void Start()
         {
+            uiManager.UpdateCurrency(_currencyAmount);
             StartPlayingLevel();
         }
 
@@ -61,6 +72,7 @@ namespace TOWER
 
         public void OnEnemyDefeated(TOW_EnemyController enemy)
         {
+            CurrencyAmount += enemy.currencyDrop;
             spawnPointManager.OnEnemyDefeated(enemy);
         }
         
