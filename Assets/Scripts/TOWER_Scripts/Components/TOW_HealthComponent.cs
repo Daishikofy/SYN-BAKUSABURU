@@ -8,9 +8,19 @@ namespace TOWER.Components
     public class TOW_HealthComponent : MonoBehaviour
     {
         public int maxHealth = 10;
-        public int CurrentHealth { get; private set; }
+        public int CurrentHealth
+        {
+            get => _currentHealth;
+            private set
+            {
+                _currentHealth = value;
+                onHealthChanged.Invoke(_currentHealth);
+            }
+        }
+        private int _currentHealth;
         
         [Header("Callbacks")]
+        public UnityEvent<int> onHealthChanged;
         public UnityEvent onDefeated;
         
        private void Awake()

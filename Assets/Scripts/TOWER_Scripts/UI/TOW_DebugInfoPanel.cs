@@ -7,6 +7,7 @@ namespace TOWER
     {
         [SerializeField] private TextMeshProUGUI currencyText;
         [SerializeField] private TextMeshProUGUI towerCountText;
+        [SerializeField] private TextMeshProUGUI lifePointsText;
 
         public void UpdateCurrency(int value)
         {
@@ -16,6 +17,11 @@ namespace TOWER
         public void UpdateTowerCount(int value)
         {
             towerCountText.text = value.ToString();
+        }
+
+        public void UpdateLifePoints(int value)
+        {
+            lifePointsText.text = value.ToString();
         }
     }
 }

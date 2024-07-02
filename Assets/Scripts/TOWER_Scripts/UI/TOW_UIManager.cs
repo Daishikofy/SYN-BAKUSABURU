@@ -31,5 +31,10 @@ namespace TOWER
         {
             debugInfoPanel.UpdateTowerCount(value);
         }
+
+        public void UpdateLifePoint(int value)
+        {
+            debugInfoPanel.UpdateLifePoints(value);
+        }
     }
 }
