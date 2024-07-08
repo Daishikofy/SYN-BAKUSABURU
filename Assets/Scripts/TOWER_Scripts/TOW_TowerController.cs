@@ -6,6 +6,7 @@ namespace TOWER
 {
     public class TOW_TowerController : MonoBehaviour
 {
+    [Header("Attack setup")]
     public TOW_ProjectileController projectilePrefab;
     [SerializeField]
     private Transform _projectilesHolder;
@@ -13,11 +14,17 @@ namespace TOWER
     public int projectileDamage = 1;
     public float detectionRange = 3f;
     public string targetTag = "";
+    
+    [Header("XP info")]
+    public int xpRate = 1;
+
+    public int levelThreshold = 10;
 
     private float _shootTimer;
-    [SerializeField]
+    private float _xpPoints;
+    private bool _isActive;
+    private int _currentLevel;
     
-
     // Update is called once per frame
     void Update()
     {
@@ -26,6 +33,16 @@ namespace TOWER
         {
             SpawnProjectile();
             _shootTimer = 0f;
+        }
+        
+        if (_isActive)
+        {
+            _xpPoints += xpRate * Time.deltaTime;
+            if (_xpPoints >= levelThreshold)
+            {
+                _currentLevel += 1;
+                levelThreshold += (int)(levelThreshold * 1.2f);
+            }
         }
     }
 
@@ -67,6 +84,11 @@ namespace TOWER
             }
             
             projectile.Initialize(enemiesInRange[closestTarget].transform, detectionRange, projectileDamage, targetTag);
+            _isActive = true;
+        }
+        else
+        {
+            _isActive = false;
         }
     }
 }
