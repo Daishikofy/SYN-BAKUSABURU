@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using TOWER.Components;
 using UnityEngine;
 
@@ -17,9 +19,13 @@ namespace TOWER
         public float velocity = 100f;
         public Transform target;
 
-        public void Initialize(Transform targetedTransform)
+        private List<Vector2> _path;
+        private int _currentPathStep;
+
+        public void Initialize(Transform targetedTransform, List<Vector2> path)
         {
             target = targetedTransform;
+            _path = path;
         }
         private void Awake()
         {
@@ -28,10 +34,17 @@ namespace TOWER
 
         private void FixedUpdate()
         {
-            Vector2 movementDirection = target.position - transform.position;
-            if (movementDirection.magnitude > 1f)
+            if (_currentPathStep < _path.Count)
             {
-                physicComponent.AddForce(movementDirection.normalized * velocity, ForceMode2D.Force);
+                Vector2 movementDirection = _path[_currentPathStep] - (Vector2)transform.position;
+                if (movementDirection.magnitude > 0.2f)
+                {
+                    physicComponent.AddForce(movementDirection.normalized * velocity, ForceMode2D.Force);
+                }
+                else
+                {
+                    _currentPathStep++;
+                }
             }
             else
             {

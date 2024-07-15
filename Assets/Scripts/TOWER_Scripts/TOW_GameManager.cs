@@ -14,6 +14,8 @@ namespace TOWER
 
         [SerializeField] private TOW_UIManager uiManager;
 
+        public TOW_Pathfind pathfindManager;
+        
         [Header("Towers")] 
         [SerializeField]  private TOW_TowerController towerPrefab;
 

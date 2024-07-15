@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,7 +15,9 @@ namespace TOWER
         private float _spawnTimer;
         private int _currentItem;
         private int _currentSequence;
-        
+
+        private List<Vector2> _pathToTarget;
+
         public void SetupWave(TOW_SpawnSequence[] spawnSequences)
         {
             _sequence = spawnSequences;
@@ -22,9 +25,19 @@ namespace TOWER
             _currentSequence = 0;
             _spawnTimer = 0f;
         }
-        
+
+        private void Start()
+        {
+            _pathToTarget = TOW_GameManager.Instance.pathfindManager.ShortestPath(this.
+                        transform.position, target.transform.position);
+        }
+
         private void Update()
         {
+            if (_pathToTarget.Count == 0)
+            {
+                return;
+            }
             if (_currentSequence < _sequence.Length)
             {
                 _spawnTimer += Time.deltaTime;
@@ -52,8 +65,19 @@ namespace TOWER
                     quaternion.identity, 
                     transform);
                 
-                enemy.Initialize(target);
+                enemy.Initialize(target, _pathToTarget);
                 TOW_GameManager.Instance.OnEnemySpawned(enemy);
         }
+        private void OnDrawGizmos()
+        {
+            if (_pathToTarget == null)
+                return;
+            for (int i = 1; i < _pathToTarget.Count; i++)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(_pathToTarget[i-1], _pathToTarget[i]);
+            }
+        }
+        
     }
 }

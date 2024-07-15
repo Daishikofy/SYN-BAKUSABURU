@@ -1,83 +1,26 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Random = UnityEngine.Random;
+using UnityEngine.Tilemaps;
 
 namespace TOWER
 {
     public class TOW_Pathfind : MonoBehaviour
     {
-        public Cell prefabCell;
-
+        public List<Tilemap> obstacles;
         private TOW_DynamicGrid _grid;
-        private int _undestructibleCellValue = 999;
 
-        private void Start()
+        private void Awake()
         {
-            _grid = new TOW_DynamicGrid();
-            int size = 10;
-            for (int j = 0; j < size; j++)
-            {
-                for (int i = 0; i < size; i++)
-                {
-                    var position = new Vector2Int(i, j);
-                    Vector2 position2 = (Vector2) position;
-                    _grid._cells.Add(position, Instantiate(prefabCell));
-                    _grid._cells[position].transform.position = position2;
-                    int block = Random.Range(0, 6);
-                    int value = 0;
-                    if (block > 4)
-                    {
-                        value = 100;
-                    }
-
-                    _grid._cells[position].Init(value);
-                }
-            }
-
-            List<Node> nodes = new List<Node>
-            {
-                new Node(Vector2Int.down),
-                new Node(Vector2Int.down),
-                new Node(Vector2Int.down),
-                new Node(Vector2Int.down),
-            };
-            Node node = new Node(Vector2Int.down);
-            Node node3 = new Node(Vector2Int.up);
-
+            _grid = new TOW_DynamicGrid(obstacles);
         }
 
-        public void DEBUG_RUN(InputAction.CallbackContext context)
+        public List<Vector2> ShortestPath(Vector2 initialPosition, Vector2 targetPosition)
         {
-            if (context.phase != InputActionPhase.Started)
-                return;
-
-            foreach (var cell in _grid._cells)
-            {
-                cell.Value.Init();
-            }
-
-            var worldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.value);
-
-
-            Debug.Log("Start pathfinding : " + worldPos);
-
-            var path = ShortestPath(_grid, Vector2.zero, worldPos);
-            int i = 1;
-            foreach (Vector2Int position in path)
-            {
-                var gridCell = _grid._cells[position];
-                gridCell.spriteRenderer.color = gridCell.selected.Evaluate((float) i / (float) path.Count);
-
-                i++;
-            }
-        }
-
-        public List<Vector2Int> ShortestPath(TOW_DynamicGrid grid, Vector2 initialPosition, Vector2 targetPosition)
-        {
+            Debug.Log("Start Pathfind");
             List<Node> openNodes = new List<Node>();
             List<Node> closedNodes = new List<Node>();
-            List<Vector2Int> path = new List<Vector2Int>();
+            List<Vector2> path = new List<Vector2>();
 
             Node startNode = new Node(new Vector2Int((int) initialPosition.x, (int) initialPosition.y));
 
@@ -101,7 +44,8 @@ namespace TOWER
                 if (currentNode.Position == target)
                 {
                     path.Add(currentNode.Position);
-                    while (currentNode.Position != initialPosition)
+                    Vector2Int startPosition = startNode.Position;
+                    while (currentNode.Position != startPosition)
                     {
                         currentNode = currentNode.Parent;
                         path.Add(currentNode.Position);
@@ -112,7 +56,7 @@ namespace TOWER
                 }
                 
                 
-                List<Node> neighbours = GetNeighbours(currentNode, target, grid);
+                List<Node> neighbours = GetNeighbours(currentNode, target, _grid);
 
                 foreach (Node neighbour in neighbours)
                 {
@@ -151,8 +95,6 @@ namespace TOWER
             return path;
         }
 
-       
-
         private int CompareHeuristic(Node A, Node B)
         {
             if (A.H < B.H)
@@ -176,20 +118,21 @@ namespace TOWER
                 node.Position + Vector2Int.right,
                 node.Position + Vector2Int.down,
                 node.Position + Vector2Int.left,
+                node.Position + Vector2Int.up + Vector2Int.right,
+                node.Position + Vector2Int.up + Vector2Int.left,
+                node.Position + Vector2Int.down + Vector2Int.right,
+                node.Position + Vector2Int.down + Vector2Int.left,
             };
 
-            List<Node> neighbours = new List<Node>(4);
+            List<Node> neighbours = new List<Node>(8);
 
             foreach (Vector2Int position in adjacentPositions)
             {
-                if (grid._cells.ContainsKey(position))
+                int cellValue = grid.GetCellValue(position);
+                if (cellValue < Int32.MaxValue)
                 {
-                    Cell cell = grid._cells[position];
-                    if (cell.value < _undestructibleCellValue)
-                    {
-                        int distance = (int) Vector2Int.Distance(targetPosition, position);
-                        neighbours.Add(new Node(node, position, distance, cell.value));
-                    }
+                    int distance = (int) Vector2Int.Distance(targetPosition, position);
+                    neighbours.Add(new Node(node, position, distance, cellValue));
                 }
             }
 
