@@ -134,9 +134,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   physicComponent: {fileID: 1176476874895959944}
   healthComponent: {fileID: 951283381383467006}
+  currencyDrop: 1
   damage: 1
   attackRate: 2
-  velocity: 80
+  velocity: 50
   target: {fileID: 0}
 --- !u!114 &951283381383467006
 MonoBehaviour:
@@ -151,6 +152,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
+  onHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
   onDefeated:
     m_PersistentCalls:
       m_Calls: []

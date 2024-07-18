@@ -9,6 +9,8 @@ namespace TOWER
         private static TOW_GameManager _instance;
         public static TOW_GameManager Instance => _instance;
 
+        public Transform playerTransform;
+
         [Header("Managers")] 
         [SerializeField] private TOW_SpawnPointManager spawnPointManager;
 
