@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace TOWER
 {
@@ -38,7 +36,7 @@ namespace TOWER
             {
                 return;
             }
-            if (_currentSequence < _sequence.Length)
+            if (_currentSequence < _sequence?.Length)
             {
                 _spawnTimer += Time.deltaTime;
                 if (_spawnTimer >= _sequence[_currentSequence].spawnRate)
@@ -78,6 +76,5 @@ namespace TOWER
                 Gizmos.DrawLine(_pathToTarget[i-1], _pathToTarget[i]);
             }
         }
-        
     }
 }

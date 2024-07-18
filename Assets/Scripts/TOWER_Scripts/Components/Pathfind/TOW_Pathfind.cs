@@ -17,7 +17,6 @@ namespace TOWER
 
         public List<Vector2> ShortestPath(Vector2 initialPosition, Vector2 targetPosition)
         {
-            Debug.Log("Start Pathfind");
             List<Node> openNodes = new List<Node>();
             List<Node> closedNodes = new List<Node>();
             List<Vector2> path = new List<Vector2>();
@@ -131,8 +130,15 @@ namespace TOWER
                 int cellValue = grid.GetCellValue(position);
                 if (cellValue < Int32.MaxValue)
                 {
-                    int distance = (int) Vector2Int.Distance(targetPosition, position);
-                    neighbours.Add(new Node(node, position, distance, cellValue));
+                    Vector2Int distance = new Vector2Int(Mathf.Abs(position.x - targetPosition.x), Mathf.Abs(position.y - targetPosition.y));
+
+                    int lowest = Mathf.Min(distance.x, distance.y);
+                    int highest = Mathf.Max(distance.x, distance.y);
+
+                    int horizontalMovesRequired = highest - lowest;
+
+                    int costToTarget = lowest * 14 + horizontalMovesRequired * 10 ;
+                    neighbours.Add(new Node(node, position, costToTarget, cellValue));
                 }
             }
 
@@ -178,11 +184,11 @@ namespace TOWER
                 Position = position;
             }
 
-            public Node(Node parent, Vector2Int position, int distance, int value)
+            public Node(Node parent, Vector2Int position, int costToTarget, int value)
             {
                 Parent = parent;
                 Position = position;
-                F = distance;
+                F = costToTarget;
                 G = parent.G + 1 + value;
             }
 
